@@ -4,22 +4,19 @@ const userServiceDB = new UserServiceDB()
 const roleServiceDB = new RoleServiceDB()
 
 class UserService {
-  async createUser({ username, email, password, roles }) {
-    const rolesFound = await roleServiceDB.findByNames(roles)
-
+  async createUser(user) {
+    const rolesFound = await roleServiceDB.findByNames(user.roles)
     // creating a new User
     const savedUser = await userServiceDB.create({
-      username,
-      email,
-      password,
+      ...user,
       roles: rolesFound.map(role => role._id),
     })
 
     return {
-      _id: savedUser._id,
-      username: savedUser.username,
-      email: savedUser.email,
-      roles: savedUser.roles,
+      _id: savedUser['_id'],
+      username: savedUser['username'],
+      email: savedUser['email'],
+      roles: savedUser['roles'],
     }
   }
 

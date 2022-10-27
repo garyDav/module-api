@@ -14,7 +14,7 @@ function authApi(app) {
   router.use((req, res, next) => {
     res.header(
       'Access-Control-Allow-Headers',
-      'x-access-token, Origin, Content-Type, Accept'
+      'Authorization, x-access-token, Origin, Content-Type, Accept'
     )
     next()
   })
@@ -34,12 +34,12 @@ function authApi(app) {
       }
 
       try {
-        const access_token = await service.signUp(_data, roles)
+        const [ token, data ] = await service.signUp(_data, roles)
 
-        res.setHeader('Authorization', `Bearer ${access_token}`)
+        res.setHeader('Authorization', `Bearer ${token}`)
         return res.status(200).json({
           message: 'signup successfully',
-          access_token,
+          data,
         })
       } catch (err) {
         next(err)
@@ -55,16 +55,20 @@ function authApi(app) {
         if (error) return next(error)
 
         const payload = {
-          _id: user._id,
-          username: user.username,
-          roles: user.roles,
+          _id: user['_id'],
+          username: user['username'],
+          email: user['email'],
+          roles: user['roles'],
         }
         const token = jwt.sign(payload, config.authJwtSecret, {
           expiresIn: config.authJwtTime,
         })
 
         res.setHeader('Authorization', `Bearer ${token}`)
-        return res.status(200).json({ user: payload })
+        return res.status(200).json({
+          message: 'signin successfully',
+          data: payload
+        })
       })
     })(req, res, next)
   })

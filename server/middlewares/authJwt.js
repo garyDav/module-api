@@ -7,20 +7,20 @@ const userServiceDB = new UserServiceDB()
 const roleServiceDB = new RoleServiceDB()
 
 export const verifyToken = async (req, res, next) => {
-  let token = req.headers['x-access-token']
-
-  if (!token) return res.status(403).json({ message: 'No token provided' })
+  const token = req.headers['authorization']?.split(' ')[1]
 
   try {
+    if (!token) throw new Error('No token provided')
+
     const decoded = jwt.verify(token, config.authJwtSecret)
-    req.userId = decoded.id
+    req.userId = decoded?._id
 
     const user = await userServiceDB.findById(req.userId)
-    if (!user) return res.status(404).json({ message: 'No user found' })
+    if (!user) throw new Error('No user found')
 
     next()
   } catch (error) {
-    return res.status(401).json({ message: 'Unauthorized!' })
+    return next(error)
   }
 }
 
@@ -36,10 +36,9 @@ export const isModerator = async (req, res, next) => {
       }
     }
 
-    return res.status(403).json({ message: 'Require Moderator Role!' })
+    throw new Error('Require Moderator Role!')
   } catch (error) {
-    console.log(error)
-    return res.status(500).send({ message: error })
+    return next(error)
   }
 }
 
@@ -55,9 +54,8 @@ export const isAdmin = async (req, res, next) => {
       }
     }
 
-    return res.status(403).json({ message: 'Require Admin Role!' })
+    throw new Error('Require Admin Role!')
   } catch (error) {
-    console.log(error)
-    return res.status(500).send({ message: error })
+    return next(error)
   }
 }

@@ -14,7 +14,11 @@ import {
   wrapErrors,
   clientErrorHandler,
 } from './middlewares/errorsHandlers.js'
-import { authApiRouter, userApiRouter } from './routes/index.js'
+import {
+  authApiRouter,
+  userApiRouter,
+  AdministrativosApiRouter,
+} from './routes/index.js'
 
 // App
 const app = express()
@@ -64,6 +68,7 @@ app.use('/upload', express.static(processPath().absolutePath))
 // Routes
 authApiRouter(app)
 userApiRouter(app)
+AdministrativosApiRouter(app)
 
 // Redirect
 app.get('/', (req, res, next) => {

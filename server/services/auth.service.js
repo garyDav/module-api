@@ -12,6 +12,7 @@ class AuthService {
     const payload = {
       _id: savedUser['_id'],
       username: savedUser['username'],
+      email: savedUser['email'],
       roles: savedUser['roles'],
     }
 
@@ -20,7 +21,7 @@ class AuthService {
       expiresIn: config.authJwtTime,
     })
 
-    return { savedUser, token }
+    return [ token, payload ]
   }
 }
 
