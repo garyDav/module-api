@@ -18,6 +18,9 @@ import {
   authApiRouter,
   userApiRouter,
   AdministrativosApiRouter,
+  EstudiantesApiRouter,
+  AcademicosApiRouter,
+  MateriasApiRouter,
 } from './routes/index.js'
 
 // App
@@ -36,7 +39,7 @@ app.use(passport.initialize())
 passport.use(localStrategy)
 
 // Security
-const whitelist = ['http://localhost:3000']
+const whitelist = ['http://localhost:3000', 'http://localhost:5173']
 const options = {
   origin: (origin, callback) => {
     if (whitelist.includes(origin) || !origin) {
@@ -69,6 +72,9 @@ app.use('/upload', express.static(processPath().absolutePath))
 authApiRouter(app)
 userApiRouter(app)
 AdministrativosApiRouter(app)
+EstudiantesApiRouter(app)
+AcademicosApiRouter(app)
+MateriasApiRouter(app)
 
 // Redirect
 app.get('/', (req, res, next) => {

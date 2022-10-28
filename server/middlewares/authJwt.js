@@ -14,6 +14,7 @@ export const verifyToken = async (req, res, next) => {
 
     const decoded = jwt.verify(token, config.authJwtSecret)
     req.userId = decoded?._id
+    req.decoded = decoded
 
     const user = await userServiceDB.findById(req.userId)
     if (!user) throw new Error('No user found')

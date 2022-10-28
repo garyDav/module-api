@@ -1,21 +1,21 @@
 import { Router } from 'express'
-import { EstudiantesService } from '../services/index.js'
-import { authJwt, verifyExist } from '../middlewares/index.js'
+import { MateriasService } from '../services/index.js'
+import { authJwt } from '../middlewares/index.js'
 
-function EstudiantesApi(app) {
+function MateriasApi(app) {
   const router = Router()
-  app.use('/api/estudiantes', router)
-  const service = new EstudiantesService()
+  app.use('/api/materias', router)
+  const service = new MateriasService()
 
   router.get(
     '/',
     [authJwt.verifyToken, authJwt.isAdmin],
     async (req, res, next) => {
       try {
-        const data = await service.listEstudiantes()
+        const data = await service.listMaterias()
 
         res.status(200).json({
-          message: 'List All Estudiantes',
+          message: 'List All Materias',
           data,
         })
       } catch (err) {
@@ -31,10 +31,10 @@ function EstudiantesApi(app) {
       const { id } = req.params
 
       try {
-        const data = await service.getOneEstudiante(id)
+        const data = await service.getOneMateria(id)
 
         res.status(200).json({
-          message: 'Get One Estudiante',
+          message: 'Get One Materia',
           data,
         })
       } catch (err) {
@@ -50,10 +50,10 @@ function EstudiantesApi(app) {
       const { id } = req.params
 
       try {
-        const data = await service.deleteOneEstudiante(id)
+        const data = await service.deleteOneMateria(id)
 
         res.status(200).json({
-          message: 'Delete One Estudiante',
+          message: 'Delete One Materia',
           data,
         })
       } catch (err) {
@@ -64,15 +64,15 @@ function EstudiantesApi(app) {
 
   router.post(
     '/',
-    [authJwt.verifyToken, authJwt.isAdmin, verifyExist.checkUserExisted],
+    [authJwt.verifyToken, authJwt.isAdmin],
     async (req, res, next) => {
       const { body: _data } = req
 
       try {
-        const data = await service.createEstudiante(_data)
+        const data = await service.createMateria(_data)
 
         res.status(200).json({
-          message: 'Estudiante Created Successfully',
+          message: 'Materia Created Successfully',
           data,
         })
       } catch (err) {
@@ -82,4 +82,4 @@ function EstudiantesApi(app) {
   )
 }
 
-export default EstudiantesApi
+export default MateriasApi

@@ -1,21 +1,21 @@
 import { Router } from 'express'
-import { EstudiantesService } from '../services/index.js'
+import { AcademicosService } from '../services/index.js'
 import { authJwt, verifyExist } from '../middlewares/index.js'
 
-function EstudiantesApi(app) {
+function AcademicosApi(app) {
   const router = Router()
-  app.use('/api/estudiantes', router)
-  const service = new EstudiantesService()
+  app.use('/api/academicos', router)
+  const service = new AcademicosService()
 
   router.get(
     '/',
     [authJwt.verifyToken, authJwt.isAdmin],
     async (req, res, next) => {
       try {
-        const data = await service.listEstudiantes()
+        const data = await service.listAcademicos()
 
         res.status(200).json({
-          message: 'List All Estudiantes',
+          message: 'List All Academicos',
           data,
         })
       } catch (err) {
@@ -31,10 +31,10 @@ function EstudiantesApi(app) {
       const { id } = req.params
 
       try {
-        const data = await service.getOneEstudiante(id)
+        const data = await service.getOneAcademico(id)
 
         res.status(200).json({
-          message: 'Get One Estudiante',
+          message: 'Get One Academico',
           data,
         })
       } catch (err) {
@@ -50,10 +50,10 @@ function EstudiantesApi(app) {
       const { id } = req.params
 
       try {
-        const data = await service.deleteOneEstudiante(id)
+        const data = await service.deleteOneAcademico(id)
 
         res.status(200).json({
-          message: 'Delete One Estudiante',
+          message: 'Delete One Academico',
           data,
         })
       } catch (err) {
@@ -69,10 +69,10 @@ function EstudiantesApi(app) {
       const { body: _data } = req
 
       try {
-        const data = await service.createEstudiante(_data)
+        const data = await service.createAcademico(_data)
 
         res.status(200).json({
-          message: 'Estudiante Created Successfully',
+          message: 'Academico Created Successfully',
           data,
         })
       } catch (err) {
@@ -82,4 +82,4 @@ function EstudiantesApi(app) {
   )
 }
 
-export default EstudiantesApi
+export default AcademicosApi

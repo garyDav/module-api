@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 
 import config from '../config/index.js'
 import { AuthService } from '../services/index.js'
-import { verifySignup } from '../middlewares/index.js'
+import { authJwt, verifySignup } from '../middlewares/index.js'
 
 function authApi(app) {
   const router = Router()
@@ -17,6 +17,23 @@ function authApi(app) {
       'Authorization, x-access-token, Origin, Content-Type, Accept'
     )
     next()
+  })
+
+  router.get('/jwt', [authJwt.verifyToken], async (req, res, next) => {
+    const { decoded: payload } = req
+
+    try {
+      delete payload.iat
+      delete payload.exp
+      const token = jwt.sign(payload, config.authJwtSecret, {
+        expiresIn: config.authJwtTime,
+      })
+
+      res.setHeader('Authorization', `Bearer ${token}`)
+      return res.status(200).json({ data: payload, token })
+    } catch (err) {
+      next(err)
+    }
   })
 
   router.post(
@@ -34,12 +51,13 @@ function authApi(app) {
       }
 
       try {
-        const [ token, data ] = await service.signUp(_data, roles)
+        const [token, data] = await service.signUp(_data, roles)
 
         res.setHeader('Authorization', `Bearer ${token}`)
         return res.status(200).json({
           message: 'signup successfully',
           data,
+          token,
         })
       } catch (err) {
         next(err)
@@ -67,7 +85,8 @@ function authApi(app) {
         res.setHeader('Authorization', `Bearer ${token}`)
         return res.status(200).json({
           message: 'signin successfully',
-          data: payload
+          data: payload,
+          token,
         })
       })
     })(req, res, next)
