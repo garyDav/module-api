@@ -4,3 +4,4 @@ export { default as AdministrativosApiRouter } from './administrativos.routes.js
 export { default as EstudiantesApiRouter } from './estudiantes.routes.js'
 export { default as AcademicosApiRouter } from './academicos.routes.js'
 export { default as MateriasApiRouter } from './materias.routes.js'
+export { default as UploadApiRouter } from './upload.routes.js'
