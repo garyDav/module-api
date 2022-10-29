@@ -16,7 +16,9 @@ function UploadApi(app) {
     } = req
 
     try {
+      console.log(files)
       const data = await service.uploadFile(files, path)
+      if (data?.error) throw new Error(data.message)
 
       res.status(200).json(data)
     } catch (err) {

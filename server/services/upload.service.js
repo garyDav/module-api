@@ -5,7 +5,7 @@ class Upload {
   async uploadFile(files, path) {
     if (!files) {
       return {
-        ok: false,
+        error: true,
         message: 'Ningun archivo fue cargado',
       }
     }
