@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import fileUpload from 'express-fileupload'
+import { authJwt } from '../middlewares/index.js'
 
 import { UploadService } from '../services/index.js'
 
@@ -9,14 +10,13 @@ function UploadApi(app) {
   app.use('/api/upload', router)
   const service = new UploadService()
 
-  router.post('/:path?', async (req, res, next) => {
+  router.post('/:path?', authJwt.verifyToken, async (req, res, next) => {
     const {
       files,
       params: { path },
     } = req
 
     try {
-      console.log(files)
       const data = await service.uploadFile(files, path)
       if (data?.error) throw new Error(data.message)
 
