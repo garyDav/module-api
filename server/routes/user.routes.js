@@ -7,6 +7,23 @@ function userApi(app) {
   app.use('/api/users', router)
   const service = new UserService()
 
+  router.get(
+    '/',
+    [authJwt.verifyToken, authJwt.isAdmin],
+    async (req, res, next) => {
+      try {
+        const data = await service.listUsers()
+
+        res.status(200).json({
+          message: 'List All Usuarios',
+          data,
+        })
+      } catch (err) {
+        next(err)
+      }
+    }
+  )
+
   router.post(
     '/',
     [

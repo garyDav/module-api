@@ -14,6 +14,13 @@ class BancoPreguntasService {
     return data
   }
 
+  async getOneByAcademicoId(id) {
+    const data = await bancoPreguntasServiceDB.findByAcademicoId(id)
+    if (!data) throw new Error('The BancoPregunta does not exist by Academico ID')
+
+    return data
+  }
+
   async deleteOneBancoPregunta(id) {
     const data = await bancoPreguntasServiceDB.findById(id)
     if (!data) throw new Error('The BancoPregunta does not exist')

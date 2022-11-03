@@ -20,9 +20,11 @@ class UserService {
     }
   }
 
-  async getUsers() {}
+  async listUsers() {
+    return userServiceDB.findAll()
+  }
 
-  async getUser() {}
+  async getOneUser() {}
 }
 
 export default UserService

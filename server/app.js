@@ -68,7 +68,7 @@ if (config.dev) {
 }
 
 // Static files
-app.use('/upload', express.static(processPath().absolutePath))
+app.use('/api/upload', express.static(processPath().absolutePath))
 
 // Routes
 authApiRouter(app)

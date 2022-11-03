@@ -7,6 +7,13 @@ class AcademicosService {
     return academicosServiceDB.findAll()
   }
 
+  async getOneAcademicoByUserId(id) {
+    const data = await academicosServiceDB.findByUserId(id)
+    if (!data) throw new Error('The Academico does not exist')
+
+    return data
+  }
+
   async getOneAcademico(id) {
     const data = await academicosServiceDB.findById(id)
     if (!data) throw new Error('The Academico does not exist')
