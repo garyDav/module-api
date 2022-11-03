@@ -67,6 +67,24 @@ function BancoPreguntasApi(app) {
     }
   })
 
+  router.put('/:id', [authJwt.verifyToken], async (req, res, next) => {
+    const {
+      body: _data,
+      params: { id },
+    } = req
+
+    try {
+      const data = await service.updateBancoPregunta(id, _data)
+
+      res.status(200).json({
+        message: 'BancoPregunta Updated Successfully',
+        data,
+      })
+    } catch (err) {
+      next(err)
+    }
+  })
+
   router.post('/', [authJwt.verifyToken], async (req, res, next) => {
     const { body: _data } = req
 
