@@ -4,7 +4,8 @@ import jwt from 'jsonwebtoken'
 
 import config from '../config/index.js'
 import { AuthService } from '../services/index.js'
-import { authJwt, verifySignup } from '../middlewares/index.js'
+import { authJwt, verifySignup, validation } from '../middlewares/index.js'
+import { authUserSchema } from '../utils/schemas/index.js'
 
 function authApi(app) {
   const router = Router()
@@ -65,32 +66,34 @@ function authApi(app) {
     }
   )
 
-  router.post('/signin', async (req, res, next) => {
-    passport.authenticate('local', (error, user) => {
-      if (error) return next(error)
-
-      req.login(user, { session: false }, async error => {
+  router.post(
+    '/signin',
+    [validation.validate(authUserSchema)],
+    async (req, res, next) => {
+      passport.authenticate('local', (error, user) => {
         if (error) return next(error)
 
-        const payload = {
-          _id: user['_id'],
-          username: user['username'],
-          email: user['email'],
-          roles: user['roles'],
-        }
-        const token = jwt.sign(payload, config.authJwtSecret, {
-          expiresIn: config.authJwtTime,
-        })
+        req.login(user, { session: false }, async error => {
+          if (error) return next(error)
 
-        res.setHeader('Authorization', `Bearer ${token}`)
-        return res.status(200).json({
-          message: 'signin successfully',
-          data: payload,
-          token,
+          const payload = {
+            _id: user['_id'],
+            username: user['username'],
+            email: user['email'],
+          }
+          const token = jwt.sign(payload, config.authJwtSecret, {
+            expiresIn: config.authJwtTime,
+          })
+
+          res.setHeader('Authorization', `Bearer ${token}`)
+          return res.status(200).json({
+            message: 'signin successfully',
+            data: payload,
+          })
         })
-      })
-    })(req, res, next)
-  })
+      })(req, res, next)
+    }
+  )
 }
 
 export default authApi

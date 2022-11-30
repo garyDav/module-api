@@ -7,14 +7,12 @@ const userService = new UserServiceDB()
 
 const localStrategy = new Strategy(
   {
-    usernameField: 'email',
-    passwordField: 'password',
     session: false,
   },
-  async function (email, password, done) {
+  async function (username, password, done) {
     try {
       // Request body email can be an email or username
-      const userFound = await userService.findByEmail(email)
+      const userFound = await userService.findByUsername(username)
 
       if (!userFound) return done(boom.unauthorized(), false)
 

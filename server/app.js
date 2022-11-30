@@ -43,6 +43,7 @@ passport.use(localStrategy)
 // Security
 const whitelist = ['http://localhost:3000', 'http://localhost:5173']
 const options = {
+  exposedHeaders: 'Authorization',
   origin: (origin, callback) => {
     if (whitelist.includes(origin) || !origin) {
       callback(null, true)
@@ -52,7 +53,7 @@ const options = {
   },
 }
 app.use(cors(options))
-if (config.dev) {
+/*if (config.dev) {
   app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader(
@@ -65,7 +66,7 @@ if (config.dev) {
     )
     next()
   })
-}
+}*/
 
 // Static files
 app.use('/api/upload', express.static(processPath().absolutePath))

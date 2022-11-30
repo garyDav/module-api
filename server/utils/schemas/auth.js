@@ -1,19 +1,8 @@
-const Joi = require('joi')
+import Joi from 'joi'
 
-const authUserSchema = {
-  email: Joi
-    .string()
-    .email({ tlds: { allow: false } })
-    .max(70)
-    .min(10)
-    .required(),
-  password: Joi
-    .string()
-    .max(50)
-    .min(5)
-    .required()
-}
+const pattern = /^[a-zA-Z0-9!-_.@#$%&*]{6,50}$/
 
-module.exports = {
-  authUserSchema
-}
+export const authUserSchema = Joi.object({
+  username: Joi.string().min(4).max(50).required(),
+  password: Joi.string().regex(pattern).required(),
+})
