@@ -10,7 +10,7 @@ export const verifyToken = async (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1]
 
   try {
-    if (!token) throw new Error('No token provided')
+    if (!token || token === 'null') throw new Error('No token provided')
 
     const decoded = jwt.verify(token, config.authJwtSecret)
     req.userId = decoded?._id

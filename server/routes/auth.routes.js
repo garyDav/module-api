@@ -31,7 +31,9 @@ function authApi(app) {
       })
 
       res.setHeader('Authorization', `Bearer ${token}`)
-      return res.status(200).json({ data: payload, token })
+      return res
+        .status(200)
+        .json({ message: 'renew token successfully', data: payload })
     } catch (err) {
       next(err)
     }
