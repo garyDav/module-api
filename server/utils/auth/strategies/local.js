@@ -13,7 +13,6 @@ passport.use(
       session: false,
     },
     async function (email, password, done) {
-      console.log('joder', email, password)
       try {
         const optionsWeb = {
           include: [
