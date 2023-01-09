@@ -21,10 +21,17 @@ class UserService {
   }
 
   async listUsers() {
-    return userServiceDB.findAll()
+    return userServiceDB.findAll().populate('roles')
   }
 
   async getOneUser() {}
+
+  async deleteOneUser(id) {
+    const data = await userServiceDB.findById(id)
+    if (!data) throw new Error('The User does not exist')
+
+    return userServiceDB.deleteById(id)
+  }
 }
 
 export default UserService

@@ -46,6 +46,25 @@ function userApi(app) {
       }
     }
   )
+
+  router.delete(
+    '/:id',
+    [authJwt.verifyToken, authJwt.isAdmin],
+    async (req, res, next) => {
+      const { id } = req.params
+
+      try {
+        const data = await service.deleteOneUser(id)
+
+        res.status(200).json({
+          message: 'Delete One User',
+          data,
+        })
+      } catch (err) {
+        next(err)
+      }
+    }
+  )
 }
 
 export default userApi
