@@ -21,7 +21,7 @@ function authApi(app) {
   })
 
   router.get('/jwt', [authJwt.verifyToken], async (req, res, next) => {
-    const { decoded: payload } = req
+    const { decoded: payload, user } = req
 
     try {
       delete payload.iat
@@ -29,11 +29,17 @@ function authApi(app) {
       const token = jwt.sign(payload, config.authJwtSecret, {
         expiresIn: config.authJwtTime,
       })
+      const roles = user['roles'].map(el => el.name)
+      const data = {
+        _id: user['_id'],
+        username: user['username'],
+        email: user['email'],
+        roles,
+        niveles: user['niveles'],
+      }
 
       res.setHeader('Authorization', `Bearer ${token}`)
-      return res
-        .status(200)
-        .json({ message: 'renew token successfully', data: payload })
+      return res.status(200).json({ message: 'renew token successfully', data })
     } catch (err) {
       next(err)
     }
@@ -86,11 +92,19 @@ function authApi(app) {
           const token = jwt.sign(payload, config.authJwtSecret, {
             expiresIn: config.authJwtTime,
           })
+          const roles = user['roles'].map(el => el.name)
+          const data = {
+            _id: user['_id'],
+            username: user['username'],
+            email: user['email'],
+            roles,
+            niveles: user['niveles'],
+          }
 
           res.setHeader('Authorization', `Bearer ${token}`)
           return res.status(200).json({
             message: 'signin successfully',
-            data: payload,
+            data,
           })
         })
       })(req, res, next)

@@ -18,6 +18,7 @@ export const verifyToken = async (req, res, next) => {
 
     const user = await userServiceDB.findById(req.userId)
     if (!user) throw new Error('No user found')
+    req.user = user
 
     next()
   } catch (error) {

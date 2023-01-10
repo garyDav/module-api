@@ -11,8 +11,11 @@ const localStrategy = new Strategy(
   },
   async function (username, password, done) {
     try {
-      // Request body email can be an email or username
-      const userFound = await userService.findByUsername(username)
+      // username puede ser C.I. o usuario
+      const regex = /^[0-9]*$/
+      const userFound = regex.test(username)
+        ? await userService.findByCI(username)
+        : await userService.findByUsername(username)
 
       if (!userFound) return done(boom.unauthorized(), false)
 
