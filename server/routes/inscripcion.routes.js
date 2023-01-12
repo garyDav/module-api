@@ -244,7 +244,7 @@ function InscripcionApi(app) {
           throw new Error('Faltan campos requeridos.')
 
         _data.userId = req.userId
-        _data.steps = 'step-06'
+        _data.steps = 'step-07'
         const data = await service.updateInscripcion(_data)
 
         res.status(200).json({
