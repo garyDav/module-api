@@ -23,6 +23,7 @@ import {
   MateriasApiRouter,
   UploadApiRouter,
   BancoPreguntasApiRouter,
+  InscripcionApiRouter,
 } from './routes/index.js'
 
 // App
@@ -80,6 +81,7 @@ AcademicosApiRouter(app)
 MateriasApiRouter(app)
 UploadApiRouter(app)
 BancoPreguntasApiRouter(app)
+InscripcionApiRouter(app)
 
 // Redirect
 app.get('/', (req, res, next) => {

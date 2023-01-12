@@ -14,6 +14,13 @@ class EstudiantesService {
     return data
   }
 
+  async getOneEstudianteByIdUser(id) {
+    const data = await estudiantesServiceDB.findByUserId(id)
+    if (!data) throw new Error('The Estudiante does not exist')
+
+    return data
+  }
+
   async deleteOneEstudiante(id) {
     const data = await estudiantesServiceDB.findById(id)
     if (!data) throw new Error('The Estudiante does not exist')

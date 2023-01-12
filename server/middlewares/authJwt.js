@@ -26,6 +26,27 @@ export const verifyToken = async (req, res, next) => {
   }
 }
 
+export const hasAccess = (in_roles = []) => {
+  return async function (req, res, next) {
+    try {
+      const user = await userServiceDB.findById(req.userId)
+      const roles = await roleServiceDB.findByIds(user.roles)
+      for (let i = 0; i < in_roles.length; i++) {
+        for (let j = 0; j < roles.length; j++) {
+          if (in_roles[i] === roles[j].name) {
+            next()
+            return
+          }
+        }
+      }
+
+      throw new Error(`Require ${in_roles.join(' or ')} Roles!`)
+    } catch (error) {
+      return next(error)
+    }
+  }
+}
+
 export const isModerator = async (req, res, next) => {
   try {
     const user = await userServiceDB.findById(req.userId)
@@ -51,6 +72,24 @@ export const isAdmin = async (req, res, next) => {
 
     for (let i = 0; i < roles.length; i++) {
       if (roles[i].name === 'admin') {
+        next()
+        return
+      }
+    }
+
+    throw new Error('Require Admin Role!')
+  } catch (error) {
+    return next(error)
+  }
+}
+
+export const isInscriptor = async (req, res, next) => {
+  try {
+    const user = await userServiceDB.findById(req.userId)
+    const roles = await roleServiceDB.findByIds(user.roles)
+
+    for (let i = 0; i < roles.length; i++) {
+      if (roles[i].name === 'inscriptor') {
         next()
         return
       }
